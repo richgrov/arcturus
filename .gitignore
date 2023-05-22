@@ -2,8 +2,13 @@
 node_modules
 /.svelte-kit
 /package
+
+# Vite
 .env
 .env.*
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Firebase
 .firebaserc
+*-debug.log
