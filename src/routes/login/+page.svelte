@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import '../../firebase';
+  import '$lib/firebase';
   import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
   onMount(() => {
     const auth = getAuth();
     
     onAuthStateChanged(auth, user => {
-      if (!user) {
+      if (user) {
         goto('/', { replaceState: true });
       }
     });
