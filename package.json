@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "concurrently \"vite dev\" \"firebase emulators:start\"",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -15,6 +15,7 @@
 		"@sveltejs/kit": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"concurrently": "^8.0.1",
 		"eslint": "^8.28.0",
 		"eslint-plugin-import": "^2.27.5",
 		"eslint-plugin-svelte": "^2.26.0",

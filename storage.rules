@@ -1,8 +1,11 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if false;
+    match /songs/{user}/{song} {
+      allow create, update: if request.auth != null &&
+        request.auth.uid == user &&
+        request.resource.contentType == 'audio/mpeg' &&
+        firestore.exists(/databases/(default)/documents/users/$(user)/songs/$(song))
     }
   }
 }
