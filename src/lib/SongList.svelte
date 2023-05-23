@@ -2,7 +2,7 @@
   import { browser } from '$app/environment';
   import type { Unsubscribe } from 'firebase/auth';
   import { onSnapshot, type CollectionReference, type DocumentData, query, QueryDocumentSnapshot } from 'firebase/firestore';
-  import { onDestroy, onMount } from 'svelte';
+  import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
   export let songCollection: CollectionReference<DocumentData>;
 
@@ -19,12 +19,15 @@
       unsub();
     }
   });
+
+  const dispatch = createEventDispatcher();
 </script>
 
 <ul>
   {#each songs as song}
     <li>
       <p>{song.data().name}</p>
+      <button on:click={() => { dispatch('playSong', { songId: song.id }); }}>Play</button>
     </li>
   {/each}
 </ul>

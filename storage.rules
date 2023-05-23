@@ -5,7 +5,9 @@ service firebase.storage {
       allow create, update: if request.auth != null &&
         request.auth.uid == user &&
         request.resource.contentType == 'audio/mpeg' &&
-        firestore.exists(/databases/(default)/documents/users/$(user)/songs/$(song))
+        firestore.exists(/databases/(default)/documents/users/$(user)/songs/$(song));
+
+      allow read: if request.auth != null && request.auth.uid == user;
     }
   }
 }
