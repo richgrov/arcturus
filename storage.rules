@@ -1,13 +1,21 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /songs/{user}/{song} {
+    match /{user}/{song} {
+      // Users can read their only the files in their own directory
+      allow read: if request.auth != null && request.auth.uid == user;
+
+      // Users can upload files as long as it's to their own directory, it's
+      // is MPEG codec, and it contains the 'fileName' metadata
       allow create, update: if request.auth != null &&
         request.auth.uid == user &&
         request.resource.contentType == 'audio/mpeg' &&
-        firestore.exists(/databases/(default)/documents/users/$(user)/songs/$(song));
+        hasFileNameMetadata(request.resource.metadata);
 
-      allow read: if request.auth != null && request.auth.uid == user;
+      // Ensures non-blank 'fileName' metadata string exists
+      function hasFileNameMetadata(metadata) {
+        return metadata.fileName is string && metadata.fileName.size() > 0;
+      }
     }
   }
 }

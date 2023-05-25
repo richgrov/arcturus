@@ -8,6 +8,7 @@
 
   import SongList from '$lib/SongList.svelte';
   import { ref, uploadBytes, type StorageReference, getDownloadURL } from 'firebase/storage';
+  import 'firebase/functions';
 
   let songCollection: CollectionReference<DocumentData>;
 
@@ -26,24 +27,18 @@
     });
   });
 
-  let uploadName: HTMLInputElement;
   let uploadFile: HTMLInputElement;
 
   function getSongFileRef(songId: string): StorageReference {
     const user = getAuth().currentUser!;
     const storage = firebase.storage();
-    return ref(storage, `songs/${user.uid}/${songId}`);
+    return ref(storage, `${user.uid}/${songId}`);
   }
 
   async function uploadSong() {
-    const doc = await addDoc(songCollection, {
-      name: uploadName.value,
-    });
-
     const file = uploadFile.files![0];
-    const fileRef = getSongFileRef(doc.id);
-    await uploadBytes(fileRef, file);
-    alert('Song added');
+    const fileRef = getSongFileRef(Date.now().toString());
+    await uploadBytes(fileRef, file, { customMetadata: { fileName: uploadFile.value } });
   }
 
   async function playSong(event: any) {
@@ -57,8 +52,6 @@
   <SongList songCollection={songCollection} on:playSong={playSong} />
 
   <form on:submit={uploadSong}>
-    <label for="upload-name">Name</label>
-    <input type="text" id="upload-name" bind:this={uploadName}>
     <label for="upload-file">File</label>
     <input type="file" id="upload-file" bind:this={uploadFile}>
     <input type="submit">

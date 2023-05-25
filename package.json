@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "concurrently \"vite dev\" \"firebase emulators:start\"",
+		"dev": "concurrently \"vite dev\" \"cd functions/ && tsc -w --preserveWatchOutput\" \"firebase emulators:start\"",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
