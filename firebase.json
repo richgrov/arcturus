@@ -24,7 +24,10 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "predeploy": "pnpm run check"
+    "predeploy": [
+      "pnpm run check",
+      "pnpm run build"
+    ]
   },
   "storage": {
     "rules": "storage.rules"
