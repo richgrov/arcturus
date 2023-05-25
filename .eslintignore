@@ -3,6 +3,7 @@ node_modules
 /.svelte-kit
 .env
 .env.*
+build/
 
 pnpm-lock.yaml
 package-lock.json

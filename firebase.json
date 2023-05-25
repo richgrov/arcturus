@@ -13,25 +13,18 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
+      "predeploy": "pnpm --prefix \"$RESOURCE_DIR\" run build"
     }
   ],
   "hosting": {
-    "public": "public",
+    "public": "build",
+    "cleanUrls": true,
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
+    "predeploy": "pnpm run check"
   },
   "storage": {
     "rules": "storage.rules"
