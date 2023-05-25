@@ -27,8 +27,9 @@
   {#each songs as song}
     <li>
       <p>{song.data().name}</p>
-      <p>{song.data().author || ''}</p>
+      <p>{song.data().author}</p>
       <button on:click={() => { dispatch('playSong', { songId: song.id }); }}>Play</button>
+      <button on:click={() => { dispatch('editSong', { songId: song.id, songData: song.data() }); }}>Edit</button>
     </li>
   {/each}
 </ul>

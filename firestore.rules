@@ -13,11 +13,11 @@ service cloud.firestore {
 
         // Valid song:
         // name - non-blank string
-        // author - optional non-blank string
+        // author - string
         function isValidSong(doc) {
           return doc.keys().hasOnly(['name', 'author']) &&
             doc.name is string && doc.name.size() > 0 &&
-            (doc.author == null || (doc.author is string && doc.author.size() > 0));
+            doc.author is string;
         }
       }
     }

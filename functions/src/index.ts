@@ -9,7 +9,6 @@ import * as musicMetadata from 'music-metadata';
 
 initializeApp();
 const db = getFirestore();
-db.settings({ ignoreUndefinedProperties: true });
 
 // When a song is uploaded, create a new Firestore document and pre-fill it
 // with info from the song's metadata
@@ -39,6 +38,6 @@ export const createSongRecord = functions.storage.onObjectFinalized(async event 
 
 	await doc.set({
 		name: metadata.common.title || fileName,
-		author: metadata.common.artist,
+		author: metadata.common.artist || '',
 	});
 });
