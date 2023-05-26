@@ -1,16 +1,28 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { getAuth, signOut } from 'firebase/auth';
+  import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+  import { onMount } from 'svelte';
 
-  async function logout(event: any) {
+  onMount(() => {
     const auth = getAuth();
-    await signOut(auth);
-    goto(event.target.href);
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        goto('/login', { replaceState: true });
+        return;
+      }
+    });
+  });
+
+  async function logout() {
+    const auth = getAuth();
+    signOut(auth);
   }
 </script>
 
 <nav>
   <a href="/">Home</a>
+  <a href="/queue">Queue</a>
   <a href="/login" on:click|preventDefault={logout}>Logout</a>
 </nav>
 

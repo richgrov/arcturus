@@ -3,7 +3,7 @@
   import { goto } from '$app/navigation';
 
   import * as firebase from '$lib/firebase';
-  import { getAuth, onAuthStateChanged } from 'firebase/auth';
+  import { getAuth } from 'firebase/auth';
   import { CollectionReference, collection, doc, type DocumentData, DocumentReference } from 'firebase/firestore';
 
   import SongList from '$lib/SongList.svelte';
@@ -18,17 +18,9 @@
 
   onMount(() => {
     const auth = getAuth();
-
-    onAuthStateChanged(auth, user => {
-      if (!user) {
-        goto('/login', { replaceState: true });
-        return;
-      }
-
-      const db = firebase.firestore();
-      const userDoc = doc(db, 'users', user.uid);
-      songCollection = collection(db, userDoc.path, 'songs');
-    });
+    const db = firebase.firestore();
+    const userDoc = doc(db, 'users', auth.currentUser!.uid);
+    songCollection = collection(db, userDoc.path, 'songs');
   });
 
   let uploadFile: HTMLInputElement;
