@@ -1,4 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app';
+import { getAuth, onAuthStateChanged, type User } from 'firebase/auth';
 import { Firestore, connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectStorageEmulator, type FirebaseStorage, getStorage } from 'firebase/storage';
 
@@ -30,4 +31,20 @@ export function storage(): FirebaseStorage {
     storageEmulatorConnected = true;
   }
   return storage;
+}
+
+/**
+ * Resolves when the authentication state is complete and the user is logged
+ * in. If the user is not logged in, the function will never resolve.
+ */
+export async function waitForAuth(): Promise<User> {
+  const auth = getAuth();
+  return new Promise(resolve => {
+    const unsub = onAuthStateChanged(auth, user => {
+      unsub();
+      if (user) {
+        resolve(user);
+      }
+    });
+  });
 }

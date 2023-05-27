@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext, onMount } from 'svelte';
 
-  import { getAuth, onAuthStateChanged } from 'firebase/auth';
+  import { getAuth } from 'firebase/auth';
   import { CollectionReference, collection, doc, type DocumentData, DocumentReference, setDoc, arrayUnion } from 'firebase/firestore';
   import { ref, uploadBytes, type StorageReference, getDownloadURL } from 'firebase/storage';
 
@@ -17,18 +17,11 @@
 
   let editingSong: [any, DocumentReference, StorageReference];
 
-  onMount(() => {
-    const auth = getAuth();
-    const unsub = onAuthStateChanged(auth, user => {
-      unsub();
-      if (!user) {
-        return;
-      }
-
-      const db = firebase.firestore();
-      userDoc = doc(db, 'users', auth.currentUser!.uid);
-      songCollection = collection(db, userDoc.path, 'songs');
-    });
+  onMount(async () => {
+    const user = await firebase.waitForAuth();
+    const db = firebase.firestore();
+    userDoc = doc(db, 'users', user.uid);
+    songCollection = collection(db, userDoc.path, 'songs');
   });
 
   let uploadFile: HTMLInputElement;
