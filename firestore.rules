@@ -2,14 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{user} {
+      allow read: if isMine();
+      allow create, update: if isMine() && isValidUserDoc(request.resource.data);
+
       match /songs/{song} {
         // Users can read any song as long as its theirs
-        allow read: if request.auth != null && request.auth.uid == user;
+        allow read: if isMine();
 
         // Users can update any song as long as its theirs and its valid
-        allow update: if request.auth != null &&
-          request.auth.uid == user &&
-          isValidSong(request.resource.data);
+        allow update: if isMine() && isValidSong(request.resource.data);
 
         // Valid song:
         // name - non-blank string
@@ -19,6 +20,15 @@ service cloud.firestore {
             doc.name is string && doc.name.size() > 0 &&
             doc.author is string;
         }
+      }
+
+      function isMine() {
+        return request.auth != null && request.auth.uid == user;
+      }
+
+      function isValidUserDoc(doc) {
+        return doc.keys().hasOnly(['queue']) &&
+          doc.queue is list;
       }
     }
   }

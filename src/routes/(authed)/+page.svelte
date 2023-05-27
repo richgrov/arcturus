@@ -1,26 +1,34 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
+  import { getContext, onMount } from 'svelte';
+
+  import { getAuth, onAuthStateChanged } from 'firebase/auth';
+  import { CollectionReference, collection, doc, type DocumentData, DocumentReference, setDoc, arrayUnion } from 'firebase/firestore';
+  import { ref, uploadBytes, type StorageReference, getDownloadURL } from 'firebase/storage';
 
   import * as firebase from '$lib/firebase';
-  import { getAuth } from 'firebase/auth';
-  import { CollectionReference, collection, doc, type DocumentData, DocumentReference } from 'firebase/firestore';
-
   import SongList from '$lib/SongList.svelte';
   import EditSongModal from '$lib/EditSongModal.svelte';
+  import * as appState from '$lib/app-state';
 
-  import { ref, uploadBytes, type StorageReference, getDownloadURL } from 'firebase/storage';
-  import 'firebase/functions';
+  const context = getContext<appState.State>(appState.key);
 
+  let userDoc: DocumentReference;
   let songCollection: CollectionReference<DocumentData>;
 
   let editingSong: [any, DocumentReference, StorageReference];
 
   onMount(() => {
     const auth = getAuth();
-    const db = firebase.firestore();
-    const userDoc = doc(db, 'users', auth.currentUser!.uid);
-    songCollection = collection(db, userDoc.path, 'songs');
+    const unsub = onAuthStateChanged(auth, user => {
+      unsub();
+      if (!user) {
+        return;
+      }
+
+      const db = firebase.firestore();
+      userDoc = doc(db, 'users', auth.currentUser!.uid);
+      songCollection = collection(db, userDoc.path, 'songs');
+    });
   });
 
   let uploadFile: HTMLInputElement;
@@ -50,6 +58,11 @@
     const fileRef = getSongFileRef(event.detail.songId);
     const audio = new Audio(await getDownloadURL(fileRef));
     audio.play();
+
+    context.queue.push(event.detail.songId);
+    setDoc(userDoc, {
+      queue: context.queue,
+    }, { merge: true });
   }
 </script>
 
