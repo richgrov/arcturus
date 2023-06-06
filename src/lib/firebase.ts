@@ -1,7 +1,8 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, onAuthStateChanged, type User } from 'firebase/auth';
+import { Auth, getAuth, onAuthStateChanged, type User } from 'firebase/auth';
 import { Firestore, connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectStorageEmulator, type FirebaseStorage, getStorage } from 'firebase/storage';
+import { onCleanup } from 'solid-js';
 
 if (getApps().length === 0) {
   initializeApp({
@@ -33,18 +34,15 @@ export function storage(): FirebaseStorage {
   return storage;
 }
 
-/**
- * Resolves when the authentication state is complete and the user is logged
- * in. If the user is not logged in, the function will never resolve.
- */
-export async function waitForAuth(): Promise<User> {
+export function auth(): Auth {
+  return getAuth();
+}
+
+export function onAuthChange(fn: (user: User | null) => void) {
   const auth = getAuth();
-  return new Promise(resolve => {
-    const unsub = onAuthStateChanged(auth, user => {
-      unsub();
-      if (user) {
-        resolve(user);
-      }
-    });
+  const unsub = onAuthStateChanged(auth, user => {
+    fn(user);
   });
+
+  onCleanup(unsub);
 }

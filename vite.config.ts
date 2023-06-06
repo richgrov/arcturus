@@ -1,6 +1,11 @@
-import { sveltekit } from '@sveltejs/kit/vite';
+import solid from 'solid-start/vite';
+import solidStartStatic from 'solid-start-static';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit()]
+  plugins: [
+    solid({
+      ssr: false,
+      adapter: solidStartStatic(),
+    })],
 });

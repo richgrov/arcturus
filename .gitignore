@@ -1,17 +1,19 @@
-.DS_Store
-node_modules
-/.svelte-kit
-/package
-functions/lib/
-
-# Vite
+node_modules/
 .env
 .env.*
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-build/
+.solid/
+
+# Editor & system files
+.DS_Store
+Thumbs.db
+/.idea
+.project
+.classpath
+*.launch
+.settings/
 
 # Firebase
 .firebaserc
 .firebase/
 *-debug.log
+functions/lib/

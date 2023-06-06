@@ -1,30 +1,30 @@
 {
-	"name": "arcturus",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"dev": "concurrently \"vite dev\" \"cd functions/ && tsc -w --preserveWatchOutput\" \"firebase emulators:start\"",
-		"build": "vite build",
-		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && eslint ."
-	},
-	"devDependencies": {
-		"@sveltejs/adapter-static": "^2.0.2",
-		"@sveltejs/kit": "^1.5.0",
-		"@typescript-eslint/eslint-plugin": "^5.45.0",
-		"@typescript-eslint/parser": "^5.45.0",
-		"concurrently": "^8.0.1",
-		"eslint": "^8.28.0",
-		"eslint-plugin-import": "^2.27.5",
-		"eslint-plugin-svelte": "^2.26.0",
-		"svelte": "^3.54.0",
-		"svelte-check": "^3.0.1",
-		"tslib": "^2.4.1",
-		"typescript": "^5.0.0",
-		"vite": "^4.3.0"
-	},
-	"type": "module",
-	"dependencies": {
-		"firebase": "^9.22.0"
-	}
+  "name": "arcturus",
+  "scripts": {
+    "dev": "concurrently \"solid-start dev\" \"cd functions/ && tsc -w --preserveWatchOutput\" \"firebase emulators:start\"",
+    "build": "solid-start build",
+    "start": "solid-start start"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "concurrently": "^8.0.1",
+    "esbuild": "^0.14.54",
+    "postcss": "^8.4.21",
+    "solid-start-node": "^0.2.19",
+    "typescript": "^4.9.4",
+    "vite": "^4.1.4"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.8.2",
+    "firebase": "^9.22.1",
+    "solid-js": "^1.7.2",
+    "solid-start": "^0.2.26",
+    "solid-start-static": "^0.2.26",
+    "undici": "^5.15.1"
+  },
+  "engines": {
+    "node": ">=16.8"
+  }
 }
