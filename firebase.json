@@ -17,7 +17,7 @@
     }
   ],
   "hosting": {
-    "public": "build",
+    "public": "dist/public/",
     "cleanUrls": true,
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "predeploy": ["pnpm run build"]

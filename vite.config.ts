@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [
     solid({
-      ssr: false,
+      ssr: true,
       adapter: solidStartStatic(),
     }),
   ],
