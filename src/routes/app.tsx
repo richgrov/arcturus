@@ -38,5 +38,6 @@ function Nav() {
   return <nav>
     <A href="/app">Home</A>
     <A href="/app/queue">Queue{queueBadge()}</A>
+    <A href="/app/settings">Settings</A>
   </nav>;
 }
