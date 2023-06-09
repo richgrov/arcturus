@@ -1,6 +1,6 @@
 import { createSignal, Show } from 'solid-js';
 import { A, Outlet, useNavigate } from 'solid-start';
-import { PlayerProvider, usePlayer } from '~/components/player';
+import { MusicController, PlayerProvider, usePlayer } from '~/components/player';
 
 import * as firebase from '~/lib/firebase';
 
@@ -20,6 +20,7 @@ export default function AuthGuard() {
   return <Show when={userId()}>
     <PlayerProvider userId={userId()!}>
       <Nav />
+      <MusicController />
       <Outlet />
     </PlayerProvider>
   </Show>;

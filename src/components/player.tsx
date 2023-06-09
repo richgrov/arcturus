@@ -4,7 +4,7 @@ import { createContext, createSignal, JSX, useContext } from 'solid-js';
 import * as firebase from '~/lib/firebase';
 import type { Song } from '~/lib/song';
 
-class MusicPlayer {
+class MusicPlayerState {
   songQueue = createSignal(new Array<Song & { id: string }>());
   currentSong = createSignal(0);
 
@@ -23,22 +23,55 @@ class MusicPlayer {
 
     const [currentSong] = this.currentSong;
     if (queue.length - 1 === currentSong()) {
-      this.audio?.pause();
-      const storage = firebase.storage();
-      getDownloadURL(ref(storage, `${this.userId}/${songId}`)).then(url => {
-        this.audio = new Audio(url);
-        this.audio.play();
-      });
+      this.playSong(songId);
     }
+  }
+
+  setCurrentSong(songIndex: number) {
+    const [queue] = this.songQueue;
+    const song = queue()[songIndex];
+    if (!song) {
+      throw new Error(`invalid song index ${songIndex}`);
+    }
+
+    const [_, setSongIndex] = this.currentSong;
+    setSongIndex(songIndex);
+    this.playSong(song.id);
+  }
+
+  playSong(songId: string) {
+    this.audio?.pause();
+
+    const storage = firebase.storage();
+    getDownloadURL(ref(storage, `${this.userId}/${songId}`)).then(url => {
+      this.audio = new Audio(url);
+      this.audio.play();
+    });
   }
 }
 
-const PlayerContext = createContext<MusicPlayer>();
+const PlayerContext = createContext<MusicPlayerState>();
 
 export function PlayerProvider(props: { children: JSX.Element, userId: string }) {
-  return <PlayerContext.Provider value={new MusicPlayer(props.userId)}>
+  return <PlayerContext.Provider value={new MusicPlayerState(props.userId)}>
     {props.children}
   </PlayerContext.Provider>
 }
 
 export const usePlayer = () => useContext(PlayerContext);
+
+export function MusicController() {
+  const musicPlayer = usePlayer()!;
+  const [queue] = musicPlayer.songQueue;
+  const [songIndex] = musicPlayer.currentSong;
+
+  function changeSongIndex(offset: number) {
+    musicPlayer.setCurrentSong(songIndex() + offset);
+  }
+
+  return <>
+    <button onClick={() => changeSongIndex(-1)} disabled={songIndex() === 0}>Previous</button>
+    <button>Pause</button>
+    <button onClick={() => changeSongIndex(1)} disabled={songIndex() === queue().length - 1}>Next</button>
+  </>;
+}
