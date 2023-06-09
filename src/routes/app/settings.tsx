@@ -1,6 +1,6 @@
-import { signOut } from 'firebase/auth';
+import { signOut } from "firebase/auth";
 
-import * as firebase from '~/lib/firebase';
+import * as firebase from "~/lib/firebase";
 
 export default function Settings() {
   const auth = firebase.auth();

@@ -1,6 +1,6 @@
 // @refresh reload
-import { Suspense } from 'solid-js';
-import { FileRoutes } from 'solid-start';
+import { Suspense } from "solid-js";
+import { FileRoutes } from "solid-start";
 import {
   Body,
   ErrorBoundary,
@@ -10,8 +10,8 @@ import {
   Routes,
   Scripts,
   Title,
-} from 'solid-start';
-import './root.css';
+} from "solid-start";
+import "./root.css";
 
 export default function Root() {
   return (

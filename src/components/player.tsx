@@ -1,8 +1,8 @@
-import { getDownloadURL, ref } from 'firebase/storage';
-import { createContext, createSignal, JSX, useContext } from 'solid-js';
+import { getDownloadURL, ref } from "firebase/storage";
+import { createContext, createSignal, JSX, useContext } from "solid-js";
 
-import * as firebase from '~/lib/firebase';
-import type { Song } from '~/lib/song';
+import * as firebase from "~/lib/firebase";
+import type { Song } from "~/lib/song";
 
 class MusicPlayerState {
   songQueue = createSignal(new Array<Song & { id: string }>());
@@ -10,12 +10,11 @@ class MusicPlayerState {
 
   private audio: HTMLAudioElement | undefined;
 
-  constructor(public userId: string) {
-  }
+  constructor(public userId: string) {}
 
   queueSong(songId: string, songData: Song) {
     const [_, setQueue] = this.songQueue;
-    const queue = setQueue(q => {
+    const queue = setQueue((q) => {
       const song = Object.assign({ id: songId }, songData);
       q = q.concat(song);
       return q;
@@ -43,7 +42,7 @@ class MusicPlayerState {
     this.audio?.pause();
 
     const storage = firebase.storage();
-    getDownloadURL(ref(storage, `${this.userId}/${songId}`)).then(url => {
+    getDownloadURL(ref(storage, `${this.userId}/${songId}`)).then((url) => {
       this.audio = new Audio(url);
       this.audio.play();
     });
@@ -52,10 +51,15 @@ class MusicPlayerState {
 
 const PlayerContext = createContext<MusicPlayerState>();
 
-export function PlayerProvider(props: { children: JSX.Element, userId: string }) {
-  return <PlayerContext.Provider value={new MusicPlayerState(props.userId)}>
-    {props.children}
-  </PlayerContext.Provider>
+export function PlayerProvider(props: {
+  children: JSX.Element;
+  userId: string;
+}) {
+  return (
+    <PlayerContext.Provider value={new MusicPlayerState(props.userId)}>
+      {props.children}
+    </PlayerContext.Provider>
+  );
 }
 
 export const usePlayer = () => useContext(PlayerContext);
@@ -69,9 +73,18 @@ export function MusicController() {
     musicPlayer.setCurrentSong(songIndex() + offset);
   }
 
-  return <>
-    <button onClick={() => changeSongIndex(-1)} disabled={songIndex() === 0}>Previous</button>
-    <button>Pause</button>
-    <button onClick={() => changeSongIndex(1)} disabled={songIndex() === queue().length - 1}>Next</button>
-  </>;
+  return (
+    <>
+      <button onClick={() => changeSongIndex(-1)} disabled={songIndex() === 0}>
+        Previous
+      </button>
+      <button>Pause</button>
+      <button
+        onClick={() => changeSongIndex(1)}
+        disabled={songIndex() === queue().length - 1}
+      >
+        Next
+      </button>
+    </>
+  );
 }

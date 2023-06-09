@@ -1,29 +1,35 @@
-import { createSignal, Show } from 'solid-js';
-import { A, Outlet, useNavigate } from 'solid-start';
-import { MusicController, PlayerProvider, usePlayer } from '~/components/player';
+import { createSignal, Show } from "solid-js";
+import { A, Outlet, useNavigate } from "solid-start";
+import {
+  MusicController,
+  PlayerProvider,
+  usePlayer,
+} from "~/components/player";
 
-import * as firebase from '~/lib/firebase';
+import * as firebase from "~/lib/firebase";
 
 export default function AuthGuard() {
   const navigate = useNavigate();
   const [userId, setUserId] = createSignal<string>();
-  
-  firebase.onAuthChange(user => {
+
+  firebase.onAuthChange((user) => {
     if (!user) {
-      navigate('/');
+      navigate("/");
       return;
     }
 
     setUserId(user.uid);
   });
 
-  return <Show when={userId()}>
-    <PlayerProvider userId={userId()!}>
-      <Nav />
-      <MusicController />
-      <Outlet />
-    </PlayerProvider>
-  </Show>;
+  return (
+    <Show when={userId()}>
+      <PlayerProvider userId={userId()!}>
+        <Nav />
+        <MusicController />
+        <Outlet />
+      </PlayerProvider>
+    </Show>
+  );
 }
 
 function Nav() {
@@ -32,12 +38,14 @@ function Nav() {
 
   const queueBadge = () => {
     const len = queue().length;
-    return len > 0 ? ` (${len})` : '';
+    return len > 0 ? ` (${len})` : "";
   };
 
-  return <nav>
-    <A href="/app">Home</A>
-    <A href="/app/queue">Queue{queueBadge()}</A>
-    <A href="/app/settings">Settings</A>
-  </nav>;
+  return (
+    <nav>
+      <A href="/app">Home</A>
+      <A href="/app/queue">Queue{queueBadge()}</A>
+      <A href="/app/settings">Settings</A>
+    </nav>
+  );
 }

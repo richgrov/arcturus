@@ -1,0 +1,4 @@
+.solid/
+build/
+functions/lib/
+**/pnpm-lock.yaml
