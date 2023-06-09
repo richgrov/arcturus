@@ -39,12 +39,23 @@ class MusicPlayerState {
   }
 
   playSong(songId: string) {
-    this.audio?.pause();
+    if (typeof this.audio !== "undefined") {
+      this.audio.onended = null;
+      this.audio.pause();
+    }
 
     const storage = firebase.storage();
     getDownloadURL(ref(storage, `${this.userId}/${songId}`)).then((url) => {
       this.audio = new Audio(url);
       this.audio.play();
+
+      this.audio.onended = () => {
+        const [songIndex] = this.currentSong;
+        const [queue] = this.songQueue;
+        if (songIndex() + 1 < queue().length) {
+          this.setCurrentSong(songIndex() + 1);
+        }
+      };
     });
   }
 }
