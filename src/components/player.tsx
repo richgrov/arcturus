@@ -8,6 +8,7 @@ class MusicPlayerState {
   songQueue = createSignal(new Array<Song & { id: string }>());
   currentSong = createSignal(0);
 
+  paused = createSignal(true);
   private audio: HTMLAudioElement | undefined;
 
   constructor(public userId: string) {}
@@ -38,16 +39,26 @@ class MusicPlayerState {
     this.playSong(song.id);
   }
 
+  setPaused(pause: boolean) {
+    const [_, setPaused] = this.paused;
+    setPaused(pause);
+    if (pause) {
+      this.audio?.pause();
+    } else {
+      this.audio?.play();
+    }
+  }
+
   playSong(songId: string) {
     if (typeof this.audio !== "undefined") {
       this.audio.onended = null;
-      this.audio.pause();
+      this.setPaused(true);
     }
 
     const storage = firebase.storage();
     getDownloadURL(ref(storage, `${this.userId}/${songId}`)).then((url) => {
       this.audio = new Audio(url);
-      this.audio.play();
+      this.setPaused(false);
 
       this.audio.onended = () => {
         const [songIndex] = this.currentSong;
@@ -79,9 +90,14 @@ export function MusicController() {
   const musicPlayer = usePlayer()!;
   const [queue] = musicPlayer.songQueue;
   const [songIndex] = musicPlayer.currentSong;
+  const [paused] = musicPlayer.paused;
 
   function changeSongIndex(offset: number) {
     musicPlayer.setCurrentSong(songIndex() + offset);
+  }
+
+  function togglePause() {
+    musicPlayer.setPaused(!paused());
   }
 
   return (
@@ -89,7 +105,7 @@ export function MusicController() {
       <button onClick={() => changeSongIndex(-1)} disabled={songIndex() === 0}>
         Previous
       </button>
-      <button>Pause</button>
+      <button onClick={togglePause}>{paused() ? "Play" : "Pause"}</button>
       <button
         onClick={() => changeSongIndex(1)}
         disabled={songIndex() === queue().length - 1}
