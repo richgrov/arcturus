@@ -61,7 +61,7 @@ function LoginForm() {
         class="w-full"
         required
       />
-      <input type="submit" class="w-full mt-5" />
+      <input type="submit" class="w-full mt-5 btn-primary" />
     </form>
   );
 }

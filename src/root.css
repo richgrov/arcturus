@@ -19,20 +19,21 @@ body {
   }
 }
 
+@layer components {
+  .btn-primary {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--primary);
+  }
+}
+
 input[type="email"],
 input[type="password"] {
   padding: 10px;
   border-radius: 10px;
   outline: none;
   color: var(--ui-dark);
-}
-
-input[type="submit"],
-button {
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: var(--primary);
 }
 
 input[disabled],
