@@ -2,7 +2,15 @@
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    colors: {
+      primary: "#ff4141",
+    },
+    extend: {
+      backgroundImage: {
+        login:
+          "linear-gradient(to bottom, black, transparent), url('background.png')",
+      },
+    },
   },
   plugins: [],
 };

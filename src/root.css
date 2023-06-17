@@ -2,14 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  height: 100%;
+}
+
 body {
-  --primary: #ff5151;
   --ui-dark: #111;
   --ui-dark-secondary: #222;
   --ui-light: #eee;
 
-  font-family: Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: "Roboto", Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
   background-color: var(--ui-light);
+  height: 100%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,7 +29,7 @@ body {
     cursor: pointer;
     padding: 10px;
     border-radius: 10px;
-    background-color: var(--primary);
+    @apply bg-primary;
   }
 }
 

@@ -6,7 +6,7 @@ import logo from "~/assets/arcturus.png";
 
 export default function Index() {
   return (
-    <div>
+    <div class="bg-login h-full">
       <Title>Login | Arcturus</Title>
       <div class="max-w-md mx-auto text-center">
         <img src={logo} alt="Logo" class="mx-auto py-20" />
