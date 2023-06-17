@@ -1,12 +1,13 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "solid-start";
+import { Title, useNavigate } from "solid-start";
 
 import * as firebase from "../lib/firebase";
-import logo from "../../public/arcturus.png";
+import logo from "~/assets/arcturus.png";
 
 export default function Index() {
   return (
     <div>
+      <Title>Login | Arcturus</Title>
       <div class="max-w-md mx-auto text-center">
         <img src={logo} alt="Logo" class="mx-auto py-20" />
         <LoginForm />

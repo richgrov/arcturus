@@ -1,5 +1,4 @@
 import { createSignal, For, onCleanup, Show } from "solid-js";
-import { Title } from "solid-start";
 
 import {
   collection,
@@ -20,8 +19,6 @@ export default function Home() {
 
   return (
     <main>
-      <Title>Hello World</Title>
-
       <SongList onEdit={(songId, song) => setEditSong([songId, song])} />
       <AddSongForm />
       <Show when={typeof editSong() !== "undefined"}>

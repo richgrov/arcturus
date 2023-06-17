@@ -1,5 +1,5 @@
 import { createSignal, Show } from "solid-js";
-import { A, Outlet, useNavigate } from "solid-start";
+import { A, Outlet, Title, useNavigate } from "solid-start";
 import {
   MusicController,
   PlayerProvider,
@@ -22,13 +22,16 @@ export default function AuthGuard() {
   });
 
   return (
-    <Show when={userId()}>
-      <PlayerProvider userId={userId()!}>
-        <Nav />
-        <MusicController />
-        <Outlet />
-      </PlayerProvider>
-    </Show>
+    <>
+      <Title>Arcturus</Title>
+      <Show when={userId()}>
+        <PlayerProvider userId={userId()!}>
+          <Nav />
+          <MusicController />
+          <Outlet />
+        </PlayerProvider>
+      </Show>
+    </>
   );
 }
 

@@ -4,8 +4,10 @@ import { createContext, createSignal, JSX, useContext } from "solid-js";
 import * as firebase from "~/lib/firebase";
 import type { Song } from "~/lib/song";
 
+type TaggedSong = Song & { id: string };
+
 class MusicPlayerState {
-  songQueue = createSignal(new Array<Song & { id: string }>());
+  songQueue = createSignal(new Array<TaggedSong>());
   currentSong = createSignal(0);
 
   paused = createSignal(true);
@@ -23,7 +25,7 @@ class MusicPlayerState {
 
     const [currentSong] = this.currentSong;
     if (queue.length - 1 === currentSong()) {
-      this.playSong(songId);
+      this.playSong(queue[currentSong()]);
     }
   }
 
@@ -36,7 +38,7 @@ class MusicPlayerState {
 
     const [_, setSongIndex] = this.currentSong;
     setSongIndex(songIndex);
-    this.playSong(song.id);
+    this.playSong(song);
   }
 
   setPaused(pause: boolean) {
@@ -49,16 +51,22 @@ class MusicPlayerState {
     }
   }
 
-  playSong(songId: string) {
+  playSong(song: TaggedSong) {
     if (typeof this.audio !== "undefined") {
       this.audio.onended = null;
       this.setPaused(true);
     }
 
     const storage = firebase.storage();
-    getDownloadURL(ref(storage, `${this.userId}/${songId}`)).then((url) => {
+    getDownloadURL(ref(storage, `${this.userId}/${song.id}`)).then((url) => {
       this.audio = new Audio(url);
       this.setPaused(false);
+
+      if (song.author) {
+        document.title = `${song.name} by ${song.author} | Arcturus`;
+      } else {
+        document.title = `${song.name} | Arcturus`;
+      }
 
       this.audio.onended = () => {
         const [songIndex] = this.currentSong;
