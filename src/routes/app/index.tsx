@@ -1,4 +1,5 @@
 import { createSignal, For, onCleanup, Show } from "solid-js";
+import { CgPlayListAdd } from "solid-icons/cg";
 
 import {
   collection,
@@ -19,6 +20,7 @@ export default function Home() {
 
   return (
     <main>
+      <SongQueue />
       <SongList onEdit={(songId, song) => setEditSong([songId, song])} />
       <AddSongForm />
       <Show when={typeof editSong() !== "undefined"}>
@@ -33,6 +35,31 @@ export default function Home() {
   );
 }
 
+function SongQueue() {
+  const musicPlayer = usePlayer()!;
+  const [queue] = musicPlayer.songQueue;
+  const [songIndex] = musicPlayer.currentSong;
+
+  return (
+    <For each={queue()}>
+      {(song, i) => {
+        return (
+          <>
+            <p>{song.name}</p>
+            <p>{song.author}</p>
+            <button>Delete</button>
+
+            <Show when={i() != songIndex()} fallback={<p>Now playing</p>}>
+              <button onClick={() => musicPlayer.setCurrentSong(i())}>
+                Play
+              </button>
+            </Show>
+          </>
+        );
+      }}
+    </For>
+  );
+}
 function SongList(props: { onEdit: (songId: string, doc: Song) => void }) {
   const [songs, setSongs] = createSignal(new Array<QueryDocumentSnapshot>());
   const musicPlayer = usePlayer()!;
@@ -49,19 +76,25 @@ function SongList(props: { onEdit: (songId: string, doc: Song) => void }) {
     <ul>
       <For each={songs()}>
         {(song) => (
-          <li>
-            <p>{song.data().name}</p>
-            <p>{song.data().author}</p>
-            <button
-              onClick={() =>
-                musicPlayer.queueSong(song.id, song.data() as Song)
-              }
-            >
-              Play
-            </button>
-            <button onClick={() => props.onEdit(song.id, song.data() as Song)}>
-              Edit
-            </button>
+          <li class="flex justify-between border-b border-gray-500 px-4">
+            <div>
+              <p>{song.data().name}</p>
+              <p>{song.data().author}</p>
+            </div>
+            <div>
+              <button
+                onClick={() =>
+                  musicPlayer.queueSong(song.id, song.data() as Song)
+                }
+              >
+                <CgPlayListAdd />
+              </button>
+              <button
+                onClick={() => props.onEdit(song.id, song.data() as Song)}
+              >
+                Edit
+              </button>
+            </div>
           </li>
         )}
       </For>

@@ -1,12 +1,17 @@
 import { createSignal, Show } from "solid-js";
-import { A, Outlet, Title, useNavigate } from "solid-start";
-import {
-  MusicController,
-  PlayerProvider,
-  usePlayer,
-} from "~/components/player";
+import { Outlet, Title, useNavigate } from "solid-start";
 
+import { PlayerProvider, usePlayer } from "~/components/player";
 import * as firebase from "~/lib/firebase";
+import logo from "~/assets/arcturus.png";
+import { signOut } from "firebase/auth";
+import {
+  CgLogOut,
+  CgPlayButton,
+  CgPlayPause,
+  CgPlayTrackNext,
+  CgPlayTrackPrev,
+} from "solid-icons/cg";
 
 export default function AuthGuard() {
   const navigate = useNavigate();
@@ -27,7 +32,6 @@ export default function AuthGuard() {
       <Show when={userId()}>
         <PlayerProvider userId={userId()!}>
           <Nav />
-          <MusicController />
           <Outlet />
         </PlayerProvider>
       </Show>
@@ -36,19 +40,50 @@ export default function AuthGuard() {
 }
 
 function Nav() {
+  const auth = firebase.auth();
   const musicPlayer = usePlayer()!;
   const [queue] = musicPlayer.songQueue;
+  const [songIndex] = musicPlayer.currentSong;
+  const [paused] = musicPlayer.paused;
 
-  const queueBadge = () => {
-    const len = queue().length;
-    return len > 0 ? ` (${len})` : "";
-  };
+  function changeSongIndex(offset: number) {
+    musicPlayer.setCurrentSong(songIndex() + offset);
+  }
+
+  function togglePause() {
+    musicPlayer.setPaused(!paused());
+  }
 
   return (
-    <nav>
-      <A href="/app">Home</A>
-      <A href="/app/queue">Queue{queueBadge()}</A>
-      <A href="/app/settings">Settings</A>
+    <nav class="w-1/6 h-full p-5 float-left text-xl">
+      <img src={logo} alt="Logo" class="" />
+
+      <div class="flex justify-evenly text-4xl py-5">
+        <button
+          class="text-primary"
+          onClick={() => changeSongIndex(-1)}
+          disabled={songIndex() === 0}
+        >
+          <CgPlayTrackPrev />
+        </button>
+        <button
+          class="bg-primary rounded-full p-2 text-background dark:text-background-dark"
+          onClick={togglePause}
+        >
+          {paused() ? <CgPlayButton /> : <CgPlayPause />}
+        </button>
+        <button
+          class="text-primary"
+          onClick={() => changeSongIndex(1)}
+          disabled={songIndex() === queue().length - 1}
+        >
+          <CgPlayTrackNext />
+        </button>
+      </div>
+
+      <button onClick={() => signOut(auth)}>
+        <CgLogOut class="inline" /> Logout
+      </button>
     </nav>
   );
 }

@@ -2,26 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  height: 100%;
-}
-
 body {
   --ui-dark: #111;
-  --ui-dark-secondary: #222;
   --ui-light: #eee;
 
   font-family: "Roboto", Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
     sans-serif;
-  background-color: var(--ui-light);
-  height: 100%;
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: var(--ui-dark);
-    color: var(--ui-light);
-  }
 }
 
 @layer components {
@@ -31,31 +17,17 @@ body {
     border-radius: 10px;
     @apply bg-primary;
   }
-}
 
-input[type="email"],
-input[type="password"] {
-  padding: 10px;
-  border-radius: 10px;
-  outline: none;
-  color: var(--ui-dark);
+  input[type="email"],
+  input[type="password"] {
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+    @apply text-foreground;
+  }
 }
 
 input[disabled],
 button[disabled] {
   opacity: 0.5;
-}
-
-a {
-  margin-right: 1rem;
-}
-
-@media (min-width: 480px) {
-  h1 {
-    max-width: none;
-  }
-
-  p {
-    max-width: none;
-  }
 }

@@ -93,33 +93,3 @@ export function PlayerProvider(props: {
 }
 
 export const usePlayer = () => useContext(PlayerContext);
-
-export function MusicController() {
-  const musicPlayer = usePlayer()!;
-  const [queue] = musicPlayer.songQueue;
-  const [songIndex] = musicPlayer.currentSong;
-  const [paused] = musicPlayer.paused;
-
-  function changeSongIndex(offset: number) {
-    musicPlayer.setCurrentSong(songIndex() + offset);
-  }
-
-  function togglePause() {
-    musicPlayer.setPaused(!paused());
-  }
-
-  return (
-    <>
-      <button onClick={() => changeSongIndex(-1)} disabled={songIndex() === 0}>
-        Previous
-      </button>
-      <button onClick={togglePause}>{paused() ? "Play" : "Pause"}</button>
-      <button
-        onClick={() => changeSongIndex(1)}
-        disabled={songIndex() === queue().length - 1}
-      >
-        Next
-      </button>
-    </>
-  );
-}
