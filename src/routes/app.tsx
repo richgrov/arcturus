@@ -1,4 +1,4 @@
-import { createSignal, Show } from "solid-js";
+import { createSignal, onMount, Show } from "solid-js";
 import { A, Outlet, Title, useNavigate } from "solid-start";
 
 import { PlayerProvider, usePlayer } from "~/components/player";
@@ -17,13 +17,15 @@ export default function AuthGuard() {
   const navigate = useNavigate();
   const [userId, setUserId] = createSignal<string>();
 
-  firebase.onAuthChange((user) => {
-    if (!user) {
-      navigate("/");
-      return;
-    }
+  onMount(() => {
+    firebase.onAuthChange((user) => {
+      if (!user) {
+        navigate("/");
+        return;
+      }
 
-    setUserId(user.uid);
+      setUserId(user.uid);
+    });
   });
 
   return (
