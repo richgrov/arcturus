@@ -31,8 +31,12 @@ export default function AuthGuard() {
       <Title>Arcturus</Title>
       <Show when={userId()}>
         <PlayerProvider userId={userId()!}>
-          <Nav />
-          <Outlet />
+          <div class="flex">
+            <Nav />
+            <main class="grow">
+              <Outlet />
+            </main>
+          </div>
         </PlayerProvider>
       </Show>
     </>
@@ -55,7 +59,7 @@ function Nav() {
   }
 
   return (
-    <nav class="w-1/6 h-full p-5 float-left text-xl">
+    <nav class="w-1/6 h-full p-5 text-xl">
       <img src={logo} alt="Logo" class="" />
 
       <div class="flex justify-evenly text-4xl py-5">
