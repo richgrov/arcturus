@@ -4,7 +4,7 @@ import { createContext, createSignal, JSX, useContext } from "solid-js";
 import * as firebase from "~/lib/firebase";
 import type { Song } from "~/lib/song";
 
-type TaggedSong = Song & { id: string };
+export type TaggedSong = Song & { id: string };
 
 class MusicPlayerState {
   songQueue = createSignal(new Array<TaggedSong>());
@@ -15,13 +15,9 @@ class MusicPlayerState {
 
   constructor(public userId: string) {}
 
-  queueSong(songId: string, songData: Song) {
+  queueSong(song: TaggedSong) {
     const [_, setQueue] = this.songQueue;
-    const queue = setQueue((q) => {
-      const song = Object.assign({ id: songId }, songData);
-      q = q.concat(song);
-      return q;
-    });
+    const queue = setQueue((q) => q.concat(song));
 
     const [currentSong] = this.currentSong;
     if (queue.length - 1 === currentSong()) {

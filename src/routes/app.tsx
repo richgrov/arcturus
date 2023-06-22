@@ -1,5 +1,5 @@
 import { createSignal, Show } from "solid-js";
-import { Outlet, Title, useNavigate } from "solid-start";
+import { A, Outlet, Title, useNavigate } from "solid-start";
 
 import { PlayerProvider, usePlayer } from "~/components/player";
 import * as firebase from "~/lib/firebase";
@@ -85,9 +85,21 @@ function Nav() {
         </button>
       </div>
 
-      <button onClick={() => signOut(auth)}>
-        <CgLogOut class="inline" /> Logout
-      </button>
+      <ul>
+        <li>
+          <A href="./">Home</A>
+        </li>
+
+        <li>
+          <A href="songs">All Songs</A>
+        </li>
+
+        <li>
+          <button onClick={() => signOut(auth)}>
+            <CgLogOut class="inline" /> Logout
+          </button>
+        </li>
+      </ul>
     </nav>
   );
 }
