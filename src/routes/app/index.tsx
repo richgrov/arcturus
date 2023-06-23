@@ -1,10 +1,13 @@
+import { CgPlayButton } from "solid-icons/cg";
 import { For, Show } from "solid-js";
 
 import { usePlayer } from "~/components/player";
+import { SongEntry } from "./song-entry";
 
 export default function Home() {
   return (
     <main>
+      <p class="text-xl p-4">Songs in Queue</p>
       <SongQueue />
     </main>
   );
@@ -16,22 +19,29 @@ function SongQueue() {
   const [songIndex] = musicPlayer.currentSong;
 
   return (
-    <For each={queue()}>
-      {(song, i) => {
-        return (
-          <>
-            <p>{song.name}</p>
-            <p>{song.author}</p>
-            <button>Delete</button>
-
-            <Show when={i() != songIndex()} fallback={<p>Now playing</p>}>
-              <button onClick={() => musicPlayer.setCurrentSong(i())}>
-                Play
-              </button>
-            </Show>
-          </>
-        );
-      }}
-    </For>
+    <ul>
+      <For each={queue()}>
+        {(song, i) => (
+          <SongEntry
+            song={song}
+            class={
+              i() === songIndex()
+                ? "bg-secondary-background dark:bg-secondary-background-dark"
+                : ""
+            }
+            buttons={
+              <Show when={i() != songIndex()} fallback={<p>Now playing</p>}>
+                <button
+                  class="text-5xl items-center"
+                  onClick={() => musicPlayer.setCurrentSong(i())}
+                >
+                  <CgPlayButton />
+                </button>
+              </Show>
+            }
+          />
+        )}
+      </For>
+    </ul>
   );
 }

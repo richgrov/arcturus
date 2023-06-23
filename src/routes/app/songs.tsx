@@ -7,6 +7,7 @@ import * as firebase from "~/lib/firebase";
 import { Song } from "~/lib/song";
 import { CgPen, CgPlayListAdd } from "solid-icons/cg";
 import { ref, uploadBytes } from "firebase/storage";
+import { SongEntry } from "./song-entry";
 
 export default function () {
   const [editSong, setEditSong] = createSignal<TaggedSong>();
@@ -90,33 +91,23 @@ function SongList(props: { onEdit: (song: TaggedSong) => void }) {
       <ul>
         <For each={songs()}>
           {(song) => (
-            <SongEntry song={song} onEdit={() => props.onEdit(song)} />
+            <SongEntry
+              song={song}
+              buttons={
+                <div class="text-3xl items-center">
+                  <button onClick={() => musicPlayer.queueSong(song)}>
+                    <CgPlayListAdd />
+                  </button>
+                  <button onClick={() => props.onEdit(song)}>
+                    <CgPen />
+                  </button>
+                </div>
+              }
+            />
           )}
         </For>
       </ul>
     </>
-  );
-}
-
-function SongEntry(props: { song: TaggedSong; onEdit: () => void }) {
-  const musicPlayer = usePlayer()!;
-  return (
-    <li class="flex justify-between border-b border-gray-500 p-4 items-center">
-      <div>
-        <p>{props.song.name}</p>
-        <p class="text-secondary-foreground dark:text-secondary-foreground-dark">
-          {props.song.author || "Unknown Author"}
-        </p>
-      </div>
-      <div class="text-3xl items-center">
-        <button onClick={() => musicPlayer.queueSong(props.song)}>
-          <CgPlayListAdd />
-        </button>
-        <button>
-          <CgPen onClick={props.onEdit} />
-        </button>
-      </div>
-    </li>
   );
 }
 
